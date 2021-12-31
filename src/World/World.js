@@ -12,6 +12,7 @@ import {
 } from './components/helpers.js';
 import { Train } from './components/Train/Train.js';
 import { MathUtils } from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+import { loadBirds } from './components/birds/birds.js';
 
 // These variables are module-scoped: we cannot access them
 // from outside the module
@@ -19,6 +20,7 @@ let camera;
 let renderer;
 let scene;
 let loop;
+let controls
 
 class World {
     constructor(container) {
@@ -30,7 +32,7 @@ class World {
         // call loop frame for animation
         loop = new Loop(camera, scene, renderer);
 
-        const controls = createControls(camera, renderer.domElement);
+        controls = createControls(camera, renderer.domElement);
         // const cube = createCube(-7);
         // const cube2 = createCube(0);
         // const cube3 = createCube(7);
@@ -40,6 +42,7 @@ class World {
         train.scale.set(0.3, 0.3, 0.3);
         // train.rotation.x: += MathUtils.degToRad(40);
         scene.add(train);
+        // scene.add(cube, cube2, cube3);
         // console.log(train);
         // add meshes to updatable list
         loop.updatables.push(camera, train);
@@ -54,6 +57,15 @@ class World {
         //     this.render();
         // };
     }
+    async init() {
+        const { parrot, flamingo, stork } = await loadBirds();
+
+        // move the target to the center of the front bird
+        controls.target.copy(parrot.position);
+
+        scene.add(parrot, flamingo, stork);
+    }
+
     render() {
         // draw a single frame
         renderer.render(scene, camera);

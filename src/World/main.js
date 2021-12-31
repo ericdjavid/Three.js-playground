@@ -14,7 +14,7 @@ function clicking(world) {
 
 }
 // create the main function
-function main() {
+async function main() {
 
     // Get a reference to the container element
     const container = document.querySelector('#scene-container');
@@ -23,6 +23,9 @@ function main() {
     const world = new World(container);
 
     // 2. Render the scene
+
+    // complete async tasks
+    await world.init();
 
     // World.render and World.start give us two ways of producing frames. 
     // For apps with constant animation, we’ll use .start to run a loop, and 
@@ -40,4 +43,6 @@ function main() {
 }
 
 // call main to start the app
-main();
+main().catch((err) => {
+    console.error(err);
+});
